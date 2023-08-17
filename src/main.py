@@ -1,6 +1,6 @@
 
 from filestruct.file_structure import *
-
+from command_handler import *
 TEST = True
 
 
@@ -9,30 +9,14 @@ def main():
     if TEST:
         test_fill(root)    
     current_node = root
+    cmd_handle = CommandHandler(current_node)
     print("""
 Flawless Files v1.0
 """)
     while 1:
         cmd = input(">")
-        current_node = run_cmd(current_node,cmd)
+        current_node = cmd_handle.handle_command(current_node,cmd)
 
-def run_cmd(current_node, cmd):
-    cmd = cmd.split(" ")
-    command = cmd[0]
-    args = " ".join(cmd[1:])
-    if hasattr(current_node, command):
-        func = getattr(current_node,command)
-        func(args)
-    
-    if command == "cd":
-        child_node = current_node.check_directory(args)
-        if child_node != None:
-            print("{} -> {}".format(current_node.name, child_node.name))
-            current_node = child_node
-        elif args == ".." and current_node.parent != None:
-            print("{} <- {}".format(current_node.parent.name, current_node.name))
-            current_node = current_node.parent
-    return current_node
 
 def test_fill(r):
     docs = Directory("Documents")
